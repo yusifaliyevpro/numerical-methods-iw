@@ -10,6 +10,8 @@ import {
   SkipForward,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useQueryState, parseAsInteger } from "nuqs";
+import { FaGlobe, FaGithub, FaFacebook, FaLinkedin } from "react-icons/fa";
 
 declare global {
   interface Window {
@@ -222,7 +224,7 @@ function NumberLine({
       )}
 
       {/* Number line */}
-      <div className="absolute top-16 left-4 right-4 h-1 bg-gradient-to-r from-slate-600 via-slate-500 to-slate-600 rounded-full" />
+      <div className="absolute top-16 left-4 right-4 h-1 bg-linear-to-br from-slate-600 via-slate-500 to-slate-600 rounded-full" />
 
       {/* Root marker */}
       {root >= min && root <= max && (
@@ -568,14 +570,14 @@ function computeFalsePositionIterations(
 
 function TitleSlide() {
   return (
-    <div className="flex flex-col items-center justify-center h-full text-center px-8 bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-900">
-      <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+    <div className="flex flex-col items-center justify-center h-full text-center px-8 bg-linear-to-br from-slate-900 via-purple-900/30 to-slate-900">
+      <h1 className="text-5xl md:text-7xl font-bold bg-linear-to-br from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
         Hybrid Methods
       </h1>
       <h2 className="text-2xl md:text-3xl text-slate-300 mb-8">
         in Numerical Methods
       </h2>
-      <div className="px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-bold text-lg inline-block mb-12">
+      <div className="px-6 py-3 rounded-full bg-linear-to-br from-cyan-500 to-blue-500 text-white font-bold text-lg inline-block mb-12">
         Root-Finding Algorithms
       </div>
       <div className="flex flex-col items-center gap-3 mt-8">
@@ -596,8 +598,8 @@ function TitleSlide() {
 
 function IntroductionSlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 to-slate-800">
-      <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-8">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 to-slate-800">
+      <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-br from-cyan-400 to-emerald-400 bg-clip-text text-transparent mb-8">
         What are Hybrid Methods?
       </h1>
       <div className="grid md:grid-cols-2 gap-8 flex-1">
@@ -632,7 +634,7 @@ function IntroductionSlide() {
             </ul>
           </div>
         </div>
-        <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 rounded-xl p-6 border border-cyan-500/20">
+        <div className="bg-linear-to-br from-cyan-500/10 to-purple-500/10 rounded-xl p-6 border border-cyan-500/20">
           <h3 className="text-xl font-bold text-cyan-400 mb-4">
             Goal of Hybrid Methods
           </h3>
@@ -653,7 +655,7 @@ function IntroductionSlide() {
 
 function BisectionSlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 via-cyan-900/20 to-slate-900">
       <h1 className="text-4xl md:text-5xl font-bold text-cyan-400 mb-6">
         Bisection Method
       </h1>
@@ -754,7 +756,7 @@ function BisectionAnimationSlide() {
   const intervals = iterations.map((iter) => ({ a: iter.a, b: iter.b }));
 
   return (
-    <div className="flex flex-col h-full p-6 md:p-10 bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-6 md:p-10 bg-linear-to-br from-slate-900 via-cyan-900/20 to-slate-900">
       <h1 className="text-3xl md:text-4xl font-bold text-cyan-400 mb-4">
         Bisection Animation
       </h1>
@@ -876,7 +878,7 @@ function BisectionAnimationSlide() {
 
 function NewtonRaphsonSlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 via-purple-900/20 to-slate-900">
       <h1 className="text-4xl md:text-5xl font-bold text-purple-400 mb-6">
         Newton-Raphson Method
       </h1>
@@ -960,7 +962,7 @@ function NewtonAnimationSlide() {
   const steps = iterations.map((iter) => ({ x: iter.x, slope: iter.fpx }));
 
   return (
-    <div className="flex flex-col h-full p-6 md:p-10 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-6 md:p-10 bg-linear-to-br from-slate-900 via-purple-900/20 to-slate-900">
       <h1 className="text-3xl md:text-4xl font-bold text-purple-400 mb-4">
         Newton-Raphson Animation
       </h1>
@@ -1080,7 +1082,7 @@ function NewtonAnimationSlide() {
 
 function IterationSlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 via-emerald-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 via-emerald-900/20 to-slate-900">
       <h1 className="text-4xl md:text-5xl font-bold text-emerald-400 mb-6">
         Fixed-Point Iteration
       </h1>
@@ -1172,7 +1174,7 @@ function IterationAnimationSlide() {
   }));
 
   return (
-    <div className="flex flex-col h-full p-6 md:p-10 bg-gradient-to-br from-slate-900 via-emerald-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-6 md:p-10 bg-linear-to-br from-slate-900 via-emerald-900/20 to-slate-900">
       <h1 className="text-3xl md:text-4xl font-bold text-emerald-400 mb-4">
         Iteration Animation
       </h1>
@@ -1282,7 +1284,7 @@ function IterationAnimationSlide() {
 
 function FalsePositionSlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 via-pink-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 via-pink-900/20 to-slate-900">
       <h1 className="text-4xl md:text-5xl font-bold text-pink-400 mb-6">
         False Position (Regula Falsi)
       </h1>
@@ -1370,10 +1372,11 @@ function FalsePositionAnimationSlide() {
     color: "bg-pink-400",
   }));
 
+  // For false position, show the interval that produced the current c value
   const intervals = iterations.map((iter) => ({ a: iter.a, b: iter.b }));
 
   return (
-    <div className="flex flex-col h-full p-6 md:p-10 bg-gradient-to-br from-slate-900 via-pink-900/20 to-slate-900">
+    <div className="flex flex-col h-full p-6 md:p-10 bg-linear-to-br from-slate-900 via-pink-900/20 to-slate-900">
       <h1 className="text-3xl md:text-4xl font-bold text-pink-400 mb-4">
         False Position Animation
       </h1>
@@ -1494,12 +1497,12 @@ function FalsePositionAnimationSlide() {
 
 function HybridCombinationsSlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 via-amber-900/20 to-slate-900">
-      <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent mb-6">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 via-amber-900/20 to-slate-900">
+      <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-br from-amber-400 to-orange-400 bg-clip-text text-transparent mb-6">
         Hybrid Combinations
       </h1>
       <div className="grid md:grid-cols-2 gap-6 flex-1">
-        <div className="bg-gradient-to-br from-cyan-500/10 to-purple-500/10 p-5 rounded-xl border border-cyan-500/30">
+        <div className="bg-linear-to-br from-cyan-500/10 to-purple-500/10 p-5 rounded-xl border border-cyan-500/30">
           <h3 className="text-xl font-bold text-cyan-400 mb-3">
             Bisection + Newton
           </h3>
@@ -1511,7 +1514,7 @@ function HybridCombinationsSlide() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-pink-500/10 to-cyan-500/10 p-5 rounded-xl border border-pink-500/30">
+        <div className="bg-linear-to-br from-pink-500/10 to-cyan-500/10 p-5 rounded-xl border border-pink-500/30">
           <h3 className="text-xl font-bold text-pink-400 mb-3">
             False Position + Newton
           </h3>
@@ -1523,7 +1526,7 @@ function HybridCombinationsSlide() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 p-5 rounded-xl border border-emerald-500/30">
+        <div className="bg-linear-to-br from-emerald-500/10 to-cyan-500/10 p-5 rounded-xl border border-emerald-500/30">
           <h3 className="text-xl font-bold text-emerald-400 mb-3">
             False Position + Iteration
           </h3>
@@ -1535,7 +1538,7 @@ function HybridCombinationsSlide() {
           </div>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-5 rounded-xl border border-purple-500/30">
+        <div className="bg-linear-to-br from-purple-500/10 to-pink-500/10 p-5 rounded-xl border border-purple-500/30">
           <h3 className="text-xl font-bold text-purple-400 mb-3">
             Bisection + Iteration
           </h3>
@@ -1553,8 +1556,8 @@ function HybridCombinationsSlide() {
 
 function SummarySlide() {
   return (
-    <div className="flex flex-col h-full p-8 md:p-12 bg-gradient-to-br from-slate-900 via-purple-900/30 to-slate-900">
-      <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">
+    <div className="flex flex-col h-full p-8 md:p-12 bg-linear-to-br from-slate-900 via-purple-900/30 to-slate-900">
+      <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-br from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">
         Summary
       </h1>
       <div className="grid md:grid-cols-2 gap-8 flex-1">
@@ -1581,7 +1584,7 @@ function SummarySlide() {
         </div>
         <div className="space-y-4">
           <h3 className="text-2xl font-bold text-emerald-400">Why Hybrid?</h3>
-          <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 p-6 rounded-xl border border-emerald-500/30">
+          <div className="bg-linear-to-br from-emerald-500/10 to-cyan-500/10 p-6 rounded-xl border border-emerald-500/30">
             <ul className="space-y-4 text-slate-300">
               <li className="flex items-start gap-3">
                 <span className="w-2 h-2 bg-emerald-400 rounded-full mt-2" />
@@ -1619,10 +1622,71 @@ function SummarySlide() {
   );
 }
 
+function ThankYouSlide() {
+  return (
+    <div className="flex flex-col items-center justify-center h-full text-center px-8 bg-linear-to-br from-slate-900 via-purple-900/30 to-slate-900">
+      <h1 className="text-6xl md:text-8xl font-bold bg-linear-to-br from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-8">
+        Thank You!
+      </h1>
+      <div className="space-y-6 mb-12">
+        <div className="flex flex-col items-center gap-4">
+          <div className="px-6 py-3 rounded-full bg-linear-to-br from-cyan-500 to-blue-500 text-white font-bold text-xl">
+            Yusif Aliyev
+          </div>
+          <p className="text-xl md:text-2xl text-slate-300 mt-4">
+            Questions? Contact me using these links
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+        <a
+          href="https://yusifaliyevpro.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-slate-800/50 p-4 rounded-xl border border-cyan-500/30 hover:bg-slate-700/50 hover:border-cyan-400/50 transition-all cursor-pointer"
+        >
+          <FaGlobe className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
+          <p className="text-xs text-slate-400">Website</p>
+        </a>
+        <a
+          href="https://github.com/yusifaliyevpro"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-slate-800/50 p-4 rounded-xl border border-slate-500/30 hover:bg-slate-700/50 hover:border-slate-400/50 transition-all cursor-pointer"
+        >
+          <FaGithub className="w-6 h-6 text-slate-300 mx-auto mb-2" />
+          <p className="text-xs text-slate-400">GitHub</p>
+        </a>
+        <a
+          href="https://www.facebook.com/yusifaliyevpro"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-slate-800/50 p-4 rounded-xl border border-blue-500/30 hover:bg-slate-700/50 hover:border-blue-400/50 transition-all cursor-pointer"
+        >
+          <FaFacebook className="w-6 h-6 text-blue-400 mx-auto mb-2" />
+          <p className="text-xs text-slate-400">Facebook</p>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/yusifaliyevpro/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-slate-800/50 p-4 rounded-xl border border-sky-500/30 hover:bg-slate-700/50 hover:border-sky-400/50 transition-all cursor-pointer"
+        >
+          <FaLinkedin className="w-6 h-6 text-sky-400 mx-auto mb-2" />
+          <p className="text-xs text-slate-400">LinkedIn</p>
+        </a>
+      </div>
+    </div>
+  );
+}
+
 // ============== MAIN PRESENTATION COMPONENT ==============
 
 export default function HybridMethodsPresentation() {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useQueryState(
+    "p",
+    parseAsInteger.withDefault(1)
+  );
 
   const slides = [
     <TitleSlide key="title" />,
@@ -1637,17 +1701,23 @@ export default function HybridMethodsPresentation() {
     <FalsePositionAnimationSlide key="falsepos-anim" />,
     <HybridCombinationsSlide key="hybrid" />,
     <SummarySlide key="summary" />,
+    <ThankYouSlide key="thankyou" />,
   ];
 
   const totalSlides = slides.length;
+  const slideIndex = currentSlide - 1; // Convert 1-based to 0-based index
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => Math.min(prev + 1, totalSlides - 1));
-  }, [totalSlides]);
+    if (currentSlide < totalSlides) {
+      setCurrentSlide(currentSlide + 1);
+    }
+  }, [currentSlide, totalSlides, setCurrentSlide]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => Math.max(prev - 1, 0));
-  }, []);
+    if (currentSlide > 1) {
+      setCurrentSlide(currentSlide - 1);
+    }
+  }, [currentSlide, setCurrentSlide]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -1665,11 +1735,11 @@ export default function HybridMethodsPresentation() {
     <div className="h-screen w-screen bg-slate-900 text-white overflow-hidden">
       {/* Slide Number - Top Right */}
       <div className="fixed top-4 right-6 text-slate-400 font-mono text-lg z-50">
-        {currentSlide + 1} / {totalSlides}
+        {currentSlide} / {totalSlides}
       </div>
 
       {/* Slide Content */}
-      <div className="h-full overflow-hidden">{slides[currentSlide]}</div>
+      <div className="h-full overflow-hidden">{slides[slideIndex]}</div>
     </div>
   );
 }

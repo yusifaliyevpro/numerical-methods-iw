@@ -1,7 +1,6 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import Script from "next/script";
 import "./globals.css";
 
@@ -10,26 +9,7 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Hybrid Methods - Numerical Methods Presentation",
-  description:
-    "Interactive presentation about Hybrid Methods in Numerical Methods",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
-  },
+  description: "Presentation about Hybrid Methods in Numerical Methods",
 };
 
 export default function RootLayout({
@@ -52,7 +32,6 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
         {children}
-        <Analytics />
       </body>
     </html>
   );

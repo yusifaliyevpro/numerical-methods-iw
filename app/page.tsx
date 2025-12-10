@@ -1,5 +1,10 @@
-import HybridMethodsPresentation from "@/components/presentation"
+import HybridMethodsPresentation from "@/components/presentation";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default function Home() {
-  return <HybridMethodsPresentation />
+  return (
+    <NuqsAdapter>
+      <HybridMethodsPresentation />
+    </NuqsAdapter>
+  );
 }
