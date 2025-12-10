@@ -141,7 +141,7 @@ function AnimationControls({
         variant="outline"
         size="sm"
         onClick={isPlaying ? onPause : onPlay}
-        className="bg-emerald-600 hover:bg-emerald-700 border-emerald-500 text-white"
+        className="bg-emerald-600 hover:bg-emerald-700 border-emerald-500 text-white hover:text-white cursor-pointer"
       >
         {isPlaying ? (
           <Pause className="w-4 h-4 mr-2" />
@@ -155,7 +155,7 @@ function AnimationControls({
         size="sm"
         onClick={onNext}
         disabled={step >= totalSteps - 1}
-        className="bg-blue-600 hover:bg-blue-700 border-blue-500 text-white disabled:opacity-50"
+        className="bg-blue-600 hover:bg-blue-700 border-blue-500 text-white hover:text-white disabled:opacity-50 cursor-pointer"
       >
         <SkipForward className="w-4 h-4 mr-2" />
         Next Step
@@ -164,7 +164,7 @@ function AnimationControls({
         variant="outline"
         size="sm"
         onClick={onReset}
-        className="bg-slate-600 hover:bg-slate-700 border-slate-500 text-white"
+        className="bg-slate-600 hover:bg-slate-700 border-slate-500 text-white hover:text-white cursor-pointer"
       >
         <RotateCcw className="w-4 h-4 mr-2" />
         Reset
@@ -726,11 +726,24 @@ function BisectionAnimationSlide() {
   const [b, setB] = useState(2);
   const [tolerance, setTolerance] = useState(0.001);
 
+  const [aInput, setAInput] = useState("1");
+  const [bInput, setBInput] = useState("2");
+  const [toleranceInput, setToleranceInput] = useState("0.001");
+
   const f = (x: number) => x * x * x - x - 2;
   const root = 1.5214;
 
   const iterations = computeBisectionIterations(f, a, b, 100, tolerance);
   const animation = useAnimationSteps(iterations.length, 1500);
+
+  const handleApply = () => {
+    const newA = parseFloat(aInput) || 0;
+    const newB = parseFloat(bInput) || 0;
+    const newTolerance = parseFloat(toleranceInput) || 0.001;
+    setA(newA);
+    setB(newB);
+    setTolerance(newTolerance);
+  };
 
   const points = iterations.map((iter, i) => ({
     x: iter.c,
@@ -750,13 +763,13 @@ function BisectionAnimationSlide() {
           Solving: <Tex math="f(x) = x^3 - x - 2 = 0" /> on interval{" "}
           <Tex math={`[${a}, ${b}]`} />
         </p>
-        <div className="flex gap-4 mt-3 flex-wrap">
+        <div className="flex gap-4 mt-3 flex-wrap items-center">
           <div className="flex items-center gap-2">
             <label className="text-slate-400 text-sm">a:</label>
             <input
               type="number"
-              value={a}
-              onChange={(e) => setA(Number(e.target.value))}
+              value={aInput}
+              onChange={(e) => setAInput(e.target.value)}
               className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.1"
             />
@@ -765,8 +778,8 @@ function BisectionAnimationSlide() {
             <label className="text-slate-400 text-sm">b:</label>
             <input
               type="number"
-              value={b}
-              onChange={(e) => setB(Number(e.target.value))}
+              value={bInput}
+              onChange={(e) => setBInput(e.target.value)}
               className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.1"
             />
@@ -775,12 +788,18 @@ function BisectionAnimationSlide() {
             <label className="text-slate-400 text-sm">Tolerance:</label>
             <input
               type="number"
-              value={tolerance}
-              onChange={(e) => setTolerance(Number(e.target.value))}
+              value={toleranceInput}
+              onChange={(e) => setToleranceInput(e.target.value)}
               className="w-24 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.0001"
             />
           </div>
+          <button
+            onClick={handleApply}
+            className="px-4 py-1 bg-cyan-600 hover:bg-cyan-700 border border-cyan-500 text-white rounded text-sm font-medium transition-colors cursor-pointer"
+          >
+            Apply
+          </button>
         </div>
       </div>
 
@@ -921,12 +940,22 @@ function NewtonAnimationSlide() {
   const [x0, setX0] = useState(2);
   const [tolerance, setTolerance] = useState(0.0001);
 
+  const [x0Input, setX0Input] = useState("2");
+  const [toleranceInput, setToleranceInput] = useState("0.0001");
+
   const f = (x: number) => x * x - 2;
   const fPrime = (x: number) => 2 * x;
   const root = Math.sqrt(2);
 
   const iterations = computeNewtonIterations(f, fPrime, x0, 100, tolerance);
   const animation = useAnimationSteps(iterations.length, 1500);
+
+  const handleApply = () => {
+    const newX0 = parseFloat(x0Input) || 0;
+    const newTolerance = parseFloat(toleranceInput) || 0.0001;
+    setX0(newX0);
+    setTolerance(newTolerance);
+  };
 
   const steps = iterations.map((iter) => ({ x: iter.x, slope: iter.fpx }));
 
@@ -941,13 +970,13 @@ function NewtonAnimationSlide() {
           <Tex math="\sqrt{2}" />
           ), starting at <Tex math={`x_0 = ${x0}`} />
         </p>
-        <div className="flex gap-4 mt-3 flex-wrap">
+        <div className="flex gap-4 mt-3 flex-wrap items-center">
           <div className="flex items-center gap-2">
             <label className="text-slate-400 text-sm">Initial x₀:</label>
             <input
               type="number"
-              value={x0}
-              onChange={(e) => setX0(Number(e.target.value))}
+              value={x0Input}
+              onChange={(e) => setX0Input(e.target.value)}
               className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.1"
             />
@@ -956,12 +985,18 @@ function NewtonAnimationSlide() {
             <label className="text-slate-400 text-sm">Tolerance:</label>
             <input
               type="number"
-              value={tolerance}
-              onChange={(e) => setTolerance(Number(e.target.value))}
+              value={toleranceInput}
+              onChange={(e) => setToleranceInput(e.target.value)}
               className="w-24 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.0001"
             />
           </div>
+          <button
+            onClick={handleApply}
+            className="px-4 py-1 bg-purple-600 hover:bg-purple-700 border border-purple-500 text-white rounded text-sm font-medium transition-colors cursor-pointer"
+          >
+            Apply
+          </button>
         </div>
       </div>
 
@@ -1114,11 +1149,21 @@ function IterationAnimationSlide() {
   const [x0, setX0] = useState(0);
   const [tolerance, setTolerance] = useState(0.0001);
 
+  const [x0Input, setX0Input] = useState("0");
+  const [toleranceInput, setToleranceInput] = useState("0.0001");
+
   const g = (x: number) => Math.cos(x);
   const root = 0.7391;
 
   const iterations = computeIterationMethod(g, x0, 100, tolerance);
   const animation = useAnimationSteps(iterations.length, 1200);
+
+  const handleApply = () => {
+    const newX0 = parseFloat(x0Input) || 0;
+    const newTolerance = parseFloat(toleranceInput) || 0.0001;
+    setX0(newX0);
+    setTolerance(newTolerance);
+  };
 
   const points = iterations.map((iter, i) => ({
     x: iter.x,
@@ -1136,13 +1181,13 @@ function IterationAnimationSlide() {
           Solving: <Tex math="x = \\cos(x)" /> starting at{" "}
           <Tex math={`x_0 = ${x0}`} />
         </p>
-        <div className="flex gap-4 mt-3 flex-wrap">
+        <div className="flex gap-4 mt-3 flex-wrap items-center">
           <div className="flex items-center gap-2">
             <label className="text-slate-400 text-sm">Initial x₀:</label>
             <input
               type="number"
-              value={x0}
-              onChange={(e) => setX0(Number(e.target.value))}
+              value={x0Input}
+              onChange={(e) => setX0Input(e.target.value)}
               className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.1"
             />
@@ -1151,12 +1196,18 @@ function IterationAnimationSlide() {
             <label className="text-slate-400 text-sm">Tolerance:</label>
             <input
               type="number"
-              value={tolerance}
-              onChange={(e) => setTolerance(Number(e.target.value))}
+              value={toleranceInput}
+              onChange={(e) => setToleranceInput(e.target.value)}
               className="w-24 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.0001"
             />
           </div>
+          <button
+            onClick={handleApply}
+            className="px-4 py-1 bg-emerald-600 hover:bg-emerald-700 border border-emerald-500 text-white rounded text-sm font-medium transition-colors cursor-pointer"
+          >
+            Apply
+          </button>
         </div>
       </div>
 
@@ -1294,11 +1345,24 @@ function FalsePositionAnimationSlide() {
   const [b, setB] = useState(2);
   const [tolerance, setTolerance] = useState(0.001);
 
+  const [aInput, setAInput] = useState("1");
+  const [bInput, setBInput] = useState("2");
+  const [toleranceInput, setToleranceInput] = useState("0.001");
+
   const f = (x: number) => x * x * x - x - 2;
   const root = 1.5214;
 
   const iterations = computeFalsePositionIterations(f, a, b, 100, tolerance);
   const animation = useAnimationSteps(iterations.length, 1500);
+
+  const handleApply = () => {
+    const newA = parseFloat(aInput) || 0;
+    const newB = parseFloat(bInput) || 0;
+    const newTolerance = parseFloat(toleranceInput) || 0.001;
+    setA(newA);
+    setB(newB);
+    setTolerance(newTolerance);
+  };
 
   const points = iterations.map((iter, i) => ({
     x: iter.c,
@@ -1318,13 +1382,13 @@ function FalsePositionAnimationSlide() {
           Solving: <Tex math="f(x) = x^3 - x - 2 = 0" /> on interval{" "}
           <Tex math={`[${a}, ${b}]`} />
         </p>
-        <div className="flex gap-4 mt-3 flex-wrap">
+        <div className="flex gap-4 mt-3 flex-wrap items-center">
           <div className="flex items-center gap-2">
             <label className="text-slate-400 text-sm">a:</label>
             <input
               type="number"
-              value={a}
-              onChange={(e) => setA(Number(e.target.value))}
+              value={aInput}
+              onChange={(e) => setAInput(e.target.value)}
               className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.1"
             />
@@ -1333,8 +1397,8 @@ function FalsePositionAnimationSlide() {
             <label className="text-slate-400 text-sm">b:</label>
             <input
               type="number"
-              value={b}
-              onChange={(e) => setB(Number(e.target.value))}
+              value={bInput}
+              onChange={(e) => setBInput(e.target.value)}
               className="w-20 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.1"
             />
@@ -1343,12 +1407,18 @@ function FalsePositionAnimationSlide() {
             <label className="text-slate-400 text-sm">Tolerance:</label>
             <input
               type="number"
-              value={tolerance}
-              onChange={(e) => setTolerance(Number(e.target.value))}
+              value={toleranceInput}
+              onChange={(e) => setToleranceInput(e.target.value)}
               className="w-24 px-2 py-1 bg-slate-700 border border-slate-600 rounded text-slate-200 text-sm"
               step="0.0001"
             />
           </div>
+          <button
+            onClick={handleApply}
+            className="px-4 py-1 bg-pink-600 hover:bg-pink-700 border border-pink-500 text-white rounded text-sm font-medium transition-colors cursor-pointer"
+          >
+            Apply
+          </button>
         </div>
       </div>
 
@@ -1455,25 +1525,25 @@ function HybridCombinationsSlide() {
 
         <div className="bg-gradient-to-br from-emerald-500/10 to-cyan-500/10 p-5 rounded-xl border border-emerald-500/30">
           <h3 className="text-xl font-bold text-emerald-400 mb-3">
-            Bisection + Secant
+            False Position + Iteration
           </h3>
           <p className="text-slate-300 text-sm mb-3">
-            Bisection for reliability, secant for derivative-free speed.
+            Use false position to get close, refine with iteration method.
           </p>
           <div className="bg-slate-900/50 p-3 rounded-lg">
-            <BlockTex math="x_{n+1} = x_n - f(x_n) \frac{x_n - x_{n-1}}{f(x_n) - f(x_{n-1})}" />
+            <BlockTex math="\text{Switch when } |f(c)| < \epsilon_1" />
           </div>
         </div>
 
         <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 p-5 rounded-xl border border-purple-500/30">
           <h3 className="text-xl font-bold text-purple-400 mb-3">
-            Brent's Method
+            Bisection + Iteration
           </h3>
           <p className="text-slate-300 text-sm mb-3">
-            Combines bisection, secant, and inverse quadratic interpolation.
+            Start with bisection to bracket root, finish with iteration.
           </p>
-          <div className="bg-slate-900/50 p-3 rounded-lg text-xs">
-            <BlockTex math="\text{Superlinear convergence + guaranteed}" />
+          <div className="bg-slate-900/50 p-3 rounded-lg">
+            <BlockTex math="\text{Use } x_{n+1} = g(x_n) \text{ when close}" />
           </div>
         </div>
       </div>
