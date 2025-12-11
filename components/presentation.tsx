@@ -109,7 +109,16 @@ function useAnimationSteps(totalSteps: number, interval = 1200) {
   return {
     step,
     isPlaying,
-    play: () => setIsPlaying(true),
+    play: () => {
+      // If at the last step, reset before playing
+      setStep((prev) => {
+        if (prev >= totalSteps - 1) {
+          return 0;
+        }
+        return prev;
+      });
+      setIsPlaying(true);
+    },
     pause: () => setIsPlaying(false),
     reset: () => {
       setStep(0);
@@ -314,9 +323,9 @@ function CartesianPlot({
   yMin: number;
   yMax: number;
 }) {
-  const width = 320;
-  const height = 220;
-  const padding = 40;
+  const width = 480;
+  const height = 360;
+  const padding = 50;
 
   const scaleX = (x: number) =>
     padding + ((x - xMin) / (xMax - xMin)) * (width - 2 * padding);
@@ -324,11 +333,25 @@ function CartesianPlot({
     height - padding - ((y - yMin) / (yMax - yMin)) * (height - 2 * padding);
 
   const curvePoints: string[] = [];
-  for (let x = xMin; x <= xMax; x += 0.02) {
+  const step = (xMax - xMin) / 100;
+  for (let x = xMin; x <= xMax; x += step) {
     const y = func(x);
     if (y >= yMin && y <= yMax) {
       curvePoints.push(`${scaleX(x)},${scaleY(y)}`);
     }
+  }
+
+  // Generate dynamic grid lines
+  const xGridValues: number[] = [];
+  const xStep = (xMax - xMin) / 4;
+  for (let i = 0; i <= 4; i++) {
+    xGridValues.push(xMin + i * xStep);
+  }
+
+  const yGridValues: number[] = [];
+  const yStep = (yMax - yMin) / 4;
+  for (let i = 0; i <= 4; i++) {
+    yGridValues.push(yMin + i * yStep);
   }
 
   return (
@@ -338,9 +361,9 @@ function CartesianPlot({
       className="mx-auto bg-slate-900/50 rounded-lg border border-slate-700"
     >
       {/* Grid */}
-      {[-2, -1, 0, 1, 2, 3].map((x) => (
+      {xGridValues.map((x, idx) => (
         <line
-          key={`vg${x}`}
+          key={`vg${idx}`}
           x1={scaleX(x)}
           y1={padding}
           x2={scaleX(x)}
@@ -348,9 +371,9 @@ function CartesianPlot({
           stroke="rgba(255,255,255,0.1)"
         />
       ))}
-      {[-2, 0, 2, 4].map((y) => (
+      {yGridValues.map((y, idx) => (
         <line
-          key={`hg${y}`}
+          key={`hg${idx}`}
           x1={padding}
           y1={scaleY(y)}
           x2={width - padding}
@@ -359,7 +382,8 @@ function CartesianPlot({
         />
       ))}
 
-      {/* Axes */}
+      {/* Axes - centered at (0,0) */}
+      {/* X-axis through y=0 */}
       <line
         x1={padding}
         y1={scaleY(0)}
@@ -368,6 +392,7 @@ function CartesianPlot({
         stroke="#64748b"
         strokeWidth="2"
       />
+      {/* Y-axis through x=0 */}
       <line
         x1={scaleX(0)}
         y1={padding}
@@ -389,6 +414,12 @@ function CartesianPlot({
       {steps.slice(0, activeStep + 1).map((s, i) => {
         const y = func(s.x);
         const xNext = s.x - y / s.slope;
+
+        // Dynamic tangent line length based on plot bounds
+        const tangentLength = (xMax - xMin) * 0.1; // 8% of x range
+        const dx = tangentLength;
+        const dy = s.slope * tangentLength;
+
         return (
           <g
             key={i}
@@ -397,10 +428,10 @@ function CartesianPlot({
           >
             {/* Tangent line */}
             <line
-              x1={scaleX(s.x - 1)}
-              y1={scaleY(y - s.slope)}
-              x2={scaleX(s.x + 1)}
-              y2={scaleY(y + s.slope)}
+              x1={scaleX(s.x - dx)}
+              y1={scaleY(y - dy)}
+              x2={scaleX(s.x + dx)}
+              y2={scaleY(y + dy)}
               stroke={i === activeStep ? "#f472b6" : "#64748b"}
               strokeWidth={i === activeStep ? 2 : 1}
               strokeDasharray={i === activeStep ? "" : "4"}
@@ -414,32 +445,69 @@ function CartesianPlot({
               stroke="white"
               strokeWidth={i === activeStep ? 2 : 0}
             />
-            {/* Label */}
-            <text
-              x={scaleX(s.x)}
-              y={scaleY(y) - 12}
-              fill="#a855f7"
-              fontSize="11"
-              textAnchor="middle"
-            >
-              x{i}
-            </text>
+            {/* Label - only show on current step */}
+            {i === activeStep && (
+              <text
+                x={scaleX(s.x)}
+                y={scaleY(y) - 12}
+                fill="#a855f7"
+                fontSize="11"
+                textAnchor="middle"
+              >
+                x{i}
+              </text>
+            )}
           </g>
         );
       })}
 
       {/* Axis labels */}
       <text
-        x={width - padding + 10}
-        y={scaleY(0) + 4}
+        x={width - padding + 20}
+        y={scaleY(0) + 5}
         fill="#94a3b8"
-        fontSize="12"
+        fontSize="14"
+        fontWeight="bold"
       >
         x
       </text>
-      <text x={scaleX(0) + 5} y={padding - 10} fill="#94a3b8" fontSize="12">
+      <text
+        x={scaleX(0) + 10}
+        y={padding - 10}
+        fill="#94a3b8"
+        fontSize="14"
+        fontWeight="bold"
+      >
         y
       </text>
+
+      {/* X-axis tick labels */}
+      {xGridValues.map((x, idx) => (
+        <text
+          key={`xtick${idx}`}
+          x={scaleX(x)}
+          y={scaleY(0) + 20}
+          fill="#94a3b8"
+          fontSize="11"
+          textAnchor="middle"
+        >
+          {x.toFixed(1)}
+        </text>
+      ))}
+
+      {/* Y-axis tick labels */}
+      {yGridValues.map((y, idx) => (
+        <text
+          key={`ytick${idx}`}
+          x={scaleX(0) - 10}
+          y={scaleY(y) + 4}
+          fill="#94a3b8"
+          fontSize="11"
+          textAnchor="end"
+        >
+          {y.toFixed(1)}
+        </text>
+      ))}
     </svg>
   );
 }
@@ -963,6 +1031,20 @@ function NewtonAnimationSlide() {
 
   const steps = iterations.map((iter) => ({ x: iter.x, slope: iter.fpx }));
 
+  // Dynamic bounds centered at origin (0,0)
+  // For f(x) = x^2 - 2, minimum y is -2
+  const allX = iterations.map((iter) => iter.x);
+  const maxAbsX = Math.max(...allX.map(Math.abs), Math.abs(x0), 3); // At least show -3 to 3
+
+  const xMin = -maxAbsX * 1.2;
+  const xMax = maxAbsX * 1.2;
+
+  // Calculate yMax based on initial point
+  const initialY = Math.max(f(x0), 10);
+  // Make yMin proportional to keep good aspect ratio
+  const yMax = initialY;
+  const yMin = -2 - yMax / 5; // Dynamic yMin that scales with yMax
+
   return (
     <div className="flex flex-col h-full p-6 md:p-10 bg-linear-to-br from-slate-900 via-purple-900/20 to-slate-900">
       <h1 className="text-3xl md:text-4xl font-bold text-purple-400 mb-4">
@@ -1013,10 +1095,10 @@ function NewtonAnimationSlide() {
             func={f}
             steps={steps}
             activeStep={animation.step}
-            xMin={0}
-            xMax={3}
-            yMin={-2}
-            yMax={4}
+            xMin={xMin}
+            xMax={xMax}
+            yMin={yMin}
+            yMax={yMax}
           />
         </div>
 
