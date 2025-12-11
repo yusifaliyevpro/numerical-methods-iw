@@ -279,11 +279,11 @@ function NumberLine({
             />
             {isCurrentStep && (
               <div
-                className={`absolute -top-2 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap font-mono ${
+                className={`absolute -top-2 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap ${
                   i === activeStep ? "text-white font-bold" : "text-slate-400"
                 }`}
               >
-                {point.label}
+                <Tex math={point.label} />
               </div>
             )}
           </div>
@@ -818,7 +818,7 @@ function BisectionAnimationSlide() {
 
   const points = iterations.map((iter, i) => ({
     x: iter.c,
-    label: `c${i + 1}=${iter.c.toFixed(3)}`,
+    label: `c_{${i + 1}} = ${iter.c.toFixed(3)}`,
     color: "bg-cyan-400",
   }));
 
@@ -887,6 +887,25 @@ function BisectionAnimationSlide() {
             activeStep={animation.step}
             intervals={intervals}
           />
+
+          {/* Previous iterations display */}
+          <div className="mt-4">
+            <h4 className="text-sm font-semibold text-cyan-400 mb-2">
+              Previous Values:
+            </h4>
+            <div className="flex gap-2 max-h-32  overflow-x-hidden">
+              <div className="flex flex-col flex-wrap gap-1">
+                {iterations.slice(0, animation.step + 1).map((iter, i) => (
+                  <div
+                    key={i}
+                    className="px-2 py-1 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded text-xs"
+                  >
+                    <Tex math={`c_{${i + 1}} = ${iter.c.toFixed(3)}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="bg-slate-800/30 p-4 rounded-xl border border-slate-700">
@@ -1058,7 +1077,9 @@ function NewtonAnimationSlide() {
         </p>
         <div className="flex gap-4 mt-3 flex-wrap items-center">
           <div className="flex items-center gap-2">
-            <label className="text-slate-400 text-sm">Initial x₀:</label>
+            <label className="text-slate-400 text-sm">
+              Initial <Tex math={`x_0`} />:
+            </label>
             <input
               type="number"
               value={x0Input}
@@ -1218,11 +1239,9 @@ function IterationSlide() {
             </ul>
           </div>
           <div className="bg-slate-800/70 p-4 rounded-xl border border-slate-600">
-            <h3 className="text-lg font-bold text-slate-300 mb-2">
-              Example Transformation:
-            </h3>
+            <h3 className="text-lg font-bold text-slate-300 mb-2">Example:</h3>
             <div className="text-sm">
-              <BlockTex math="x^2 - 2 = 0 \implies x = \frac{2}{x}" />
+              <BlockTex math="x = e^{-x} \implies x^* \approx 0.567" />
             </div>
           </div>
         </div>
@@ -1238,8 +1257,8 @@ function IterationAnimationSlide() {
   const [x0Input, setX0Input] = useState("0");
   const [toleranceInput, setToleranceInput] = useState("0.0001");
 
-  const g = (x: number) => Math.cos(x);
-  const root = 0.7391;
+  const g = (x: number) => Math.exp(-x); // g(x) = e^(-x)
+  const root = 0.5671; // Fixed point of e^(-x)
 
   const iterations = computeIterationMethod(g, x0, 100, tolerance);
   const animation = useAnimationSteps(iterations.length, 1200);
@@ -1254,9 +1273,17 @@ function IterationAnimationSlide() {
 
   const points = iterations.map((iter, i) => ({
     x: iter.x,
-    label: `x${i}=${iter.x.toFixed(3)}`,
+    label: `x_{${i}} = ${iter.x.toFixed(3)}`,
     color: "bg-emerald-400",
   }));
+
+  // Calculate dynamic bounds for number line
+  const allX = iterations.map((iter) => iter.x);
+  const minX = Math.min(...allX, root);
+  const maxX = Math.max(...allX, root);
+  const xPadding = (maxX - minX) * 0.1 || 0.2;
+  const dynamicMin = minX - xPadding;
+  const dynamicMax = maxX + xPadding;
 
   return (
     <div className="flex flex-col h-full p-6 md:p-10 bg-linear-to-br from-slate-900 via-emerald-900/20 to-slate-900">
@@ -1265,12 +1292,14 @@ function IterationAnimationSlide() {
       </h1>
       <div className="bg-slate-800/50 p-4 rounded-xl border border-emerald-500/30 mb-4">
         <p className="text-slate-300 mb-2">
-          Solving: <Tex math="x = \\cos(x)" /> starting at{" "}
+          Solving: <Tex math="x = e^{-x}" /> starting at{" "}
           <Tex math={`x_0 = ${x0}`} />
         </p>
         <div className="flex gap-4 mt-3 flex-wrap items-center">
           <div className="flex items-center gap-2">
-            <label className="text-slate-400 text-sm">Initial x₀:</label>
+            <label className="text-slate-400 text-sm">
+              Initial <Tex math={`x_0`} />:
+            </label>
             <input
               type="number"
               value={x0Input}
@@ -1305,14 +1334,33 @@ function IterationAnimationSlide() {
           </h3>
           <NumberLine
             points={points}
-            min={0}
-            max={1.2}
+            min={dynamicMin}
+            max={dynamicMax}
             root={root}
             activeStep={animation.step}
           />
           <p className="text-xs text-slate-400 mt-2 text-center">
             Watch the values spiral toward the fixed point
           </p>
+
+          {/* Previous iterations display */}
+          <div className="mt-4">
+            <h4 className="text-sm font-semibold text-emerald-400 mb-2">
+              Previous Values:
+            </h4>
+            <div className="flex gap-2 max-h-[95px] overflow-x-hidden">
+              <div className="flex flex-col flex-wrap gap-1">
+                {iterations.slice(0, animation.step + 1).map((iter, i) => (
+                  <div
+                    key={i}
+                    className="px-2 py-1 bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded text-xs"
+                  >
+                    <Tex math={`x_{${i}} = ${iter.x.toFixed(3)}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="bg-slate-800/30 p-4 rounded-xl border border-slate-700">
@@ -1328,9 +1376,9 @@ function IterationAnimationSlide() {
               </div>
               <div className="bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/30">
                 <BlockTex
-                  math={`x_{n+1} = g(x_n) = \\cos(${iterations[
+                  math={`x_{n+1} = g(x_n) = e^{-${iterations[
                     animation.step
-                  ].x.toFixed(4)}) = ${
+                  ].x.toFixed(4)}} = ${
                     animation.step < iterations.length - 1
                       ? iterations[animation.step + 1].x.toFixed(4)
                       : iterations[animation.step].x.toFixed(4)
@@ -1454,7 +1502,7 @@ function FalsePositionAnimationSlide() {
 
   const points = iterations.map((iter, i) => ({
     x: iter.c,
-    label: `c${i + 1}=${iter.c.toFixed(3)}`,
+    label: `c_{${i + 1}} = ${iter.c.toFixed(3)}`,
     color: "bg-pink-400",
   }));
 
@@ -1524,6 +1572,25 @@ function FalsePositionAnimationSlide() {
             activeStep={animation.step}
             intervals={intervals}
           />
+
+          {/* Previous iterations display */}
+          <div className="mt-4">
+            <h4 className="text-sm font-semibold text-pink-400 mb-2">
+              Previous Values:
+            </h4>
+            <div className="flex gap-2 max-h-20 overflow-x-hidden">
+              <div className="flex flex-col flex-wrap gap-1">
+                {iterations.slice(0, animation.step + 1).map((iter, i) => (
+                  <div
+                    key={i}
+                    className="px-2 py-1 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded text-xs"
+                  >
+                    <Tex math={`c_{${i + 1}} = ${iter.c.toFixed(3)}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="bg-slate-800/30 p-4 rounded-xl border border-slate-700">
