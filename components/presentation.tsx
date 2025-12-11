@@ -739,6 +739,7 @@ function BisectionAnimationSlide() {
   const animation = useAnimationSteps(iterations.length, 1500);
 
   const handleApply = () => {
+    animation.reset();
     const newA = parseFloat(aInput) || 0;
     const newB = parseFloat(bInput) || 0;
     const newTolerance = parseFloat(toleranceInput) || 0.001;
@@ -953,6 +954,7 @@ function NewtonAnimationSlide() {
   const animation = useAnimationSteps(iterations.length, 1500);
 
   const handleApply = () => {
+    animation.reset();
     const newX0 = parseFloat(x0Input) || 0;
     const newTolerance = parseFloat(toleranceInput) || 0.0001;
     setX0(newX0);
@@ -1161,6 +1163,7 @@ function IterationAnimationSlide() {
   const animation = useAnimationSteps(iterations.length, 1200);
 
   const handleApply = () => {
+    animation.reset();
     const newX0 = parseFloat(x0Input) || 0;
     const newTolerance = parseFloat(toleranceInput) || 0.0001;
     setX0(newX0);
@@ -1358,6 +1361,7 @@ function FalsePositionAnimationSlide() {
   const animation = useAnimationSteps(iterations.length, 1500);
 
   const handleApply = () => {
+    animation.reset();
     const newA = parseFloat(aInput) || 0;
     const newB = parseFloat(bInput) || 0;
     const newTolerance = parseFloat(toleranceInput) || 0.001;
