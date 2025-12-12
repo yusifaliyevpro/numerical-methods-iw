@@ -1,57 +1,12 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Play,
-  Pause,
-  RotateCcw,
-  SkipForward,
-} from "lucide-react";
+
+import { LuSkipForward, LuRotateCcw, LuPause, LuPlay } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { useQueryState, parseAsInteger } from "nuqs";
 import { FaGlobe, FaGithub, FaFacebook, FaLinkedin } from "react-icons/fa";
-
-declare global {
-  interface Window {
-    katex: {
-      renderToString: (
-        tex: string,
-        options?: { displayMode?: boolean; throwOnError?: boolean }
-      ) => string;
-    };
-  }
-}
-
-function useKatex() {
-  const [ready, setReady] = useState(false);
-
-  useEffect(() => {
-    // Check if KaTeX is already loaded
-    const checkKatex = () => {
-      if (window.katex) {
-        setReady(true);
-        return true;
-      }
-      return false;
-    };
-
-    // Try immediately
-    if (checkKatex()) return;
-
-    // Poll for KaTeX availability
-    const interval = setInterval(() => {
-      if (checkKatex()) {
-        clearInterval(interval);
-      }
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return ready;
-}
+import { renderToString } from "katex";
 
 function Tex({
   children,
@@ -62,16 +17,14 @@ function Tex({
   math?: string;
   display?: boolean;
 }) {
-  const ready = useKatex();
-
   // Ensure we always have a valid string
   const texString = String(math || children || "");
 
-  if (!ready || !texString) {
+  if (!texString) {
     return <span className="font-mono text-cyan-300">{texString}</span>;
   }
 
-  const html = window.katex.renderToString(texString, {
+  const html = renderToString(texString, {
     displayMode: display,
     throwOnError: false,
   });
@@ -155,9 +108,9 @@ function AnimationControls({
         className="bg-emerald-600 hover:bg-emerald-700 border-emerald-500 text-white hover:text-white cursor-pointer"
       >
         {isPlaying ? (
-          <Pause className="w-4 h-4 mr-2" />
+          <LuPause className="w-4 h-4 mr-2" />
         ) : (
-          <Play className="w-4 h-4 mr-2" />
+          <LuPlay className="w-4 h-4 mr-2" />
         )}
         {isPlaying ? "Pause" : "Play Animation"}
       </Button>
@@ -168,7 +121,7 @@ function AnimationControls({
         disabled={step >= totalSteps - 1}
         className="bg-blue-600 hover:bg-blue-700 border-blue-500 text-white hover:text-white disabled:opacity-50 cursor-pointer"
       >
-        <SkipForward className="w-4 h-4 mr-2" />
+        <LuSkipForward className="w-4 h-4 mr-2" />
         Next Step
       </Button>
       <Button
@@ -177,7 +130,7 @@ function AnimationControls({
         onClick={onReset}
         className="bg-slate-600 hover:bg-slate-700 border-slate-500 text-white hover:text-white cursor-pointer"
       >
-        <RotateCcw className="w-4 h-4 mr-2" />
+        <LuRotateCcw className="w-4 h-4 mr-2" />
         Reset
       </Button>
       <div className="flex items-center gap-2 ml-2">
