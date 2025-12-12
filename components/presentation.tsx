@@ -851,7 +851,7 @@ function BisectionAnimationSlide() {
                 {iterations.slice(0, animation.step + 1).map((iter, i) => (
                   <div
                     key={i}
-                    className="px-2 py-1 bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded text-xs"
+                    className="px-2 py-1 bg-linear-to-r from-cyan-500/10 to-blue-500/10 border border-cyan-500/30 rounded text-xs"
                   >
                     <Tex math={`c_{${i + 1}} = ${iter.c.toFixed(3)}`} />
                   </div>
@@ -1301,12 +1301,12 @@ function IterationAnimationSlide() {
             <h4 className="text-sm font-semibold text-emerald-400 mb-2">
               Previous Values:
             </h4>
-            <div className="flex gap-2 max-h-[95px] overflow-x-hidden">
+            <div className="flex gap-2 max-h-23.75 overflow-x-hidden">
               <div className="flex flex-col flex-wrap gap-1">
                 {iterations.slice(0, animation.step + 1).map((iter, i) => (
                   <div
                     key={i}
-                    className="px-2 py-1 bg-gradient-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded text-xs"
+                    className="px-2 py-1 bg-linear-to-r from-emerald-500/10 to-green-500/10 border border-emerald-500/30 rounded text-xs"
                   >
                     <Tex math={`x_{${i}} = ${iter.x.toFixed(3)}`} />
                   </div>
@@ -1536,7 +1536,7 @@ function FalsePositionAnimationSlide() {
                 {iterations.slice(0, animation.step + 1).map((iter, i) => (
                   <div
                     key={i}
-                    className="px-2 py-1 bg-gradient-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded text-xs"
+                    className="px-2 py-1 bg-linear-to-r from-pink-500/10 to-purple-500/10 border border-pink-500/30 rounded text-xs"
                   >
                     <Tex math={`c_{${i + 1}} = ${iter.c.toFixed(3)}`} />
                   </div>
